@@ -87,7 +87,19 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    pass
+    index = hash(key, hash_table.capacity)
+
+    current_pair = hash_table.storage[index]
+    while current_pair is not None and current_pair.key != key:
+        current_pair = current_pair.next
+
+    if current_pair is None:
+        return None
+    elif current_pair.key == key:
+        return current_pair.value
+    else:
+        print('oops')
+    
 
 
 # '''
@@ -118,12 +130,13 @@ def Testing():
 
     print("---------")
     test_print(ht)
+    print("---------")
 
 
 
-    # print(hash_table_retrieve(ht, "line_1"))
-    # print(hash_table_retrieve(ht, "line_2"))
-    # print(hash_table_retrieve(ht, "line_3"))
+    print(hash_table_retrieve(ht, "line_1"))
+    print(hash_table_retrieve(ht, "line_2"))
+    print(hash_table_retrieve(ht, "line_3"))
 
     # old_capacity = len(ht.storage)
     # ht = hash_table_resize(ht)
