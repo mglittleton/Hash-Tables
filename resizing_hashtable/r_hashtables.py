@@ -21,6 +21,8 @@ class LinkedPair:
 class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity
+        self.count = 0
+        self.init_capacity = capacity
         self.storage = [None] * capacity
 
 
@@ -47,6 +49,12 @@ def hash_table_insert(hash_table, key, value):
     current_pair = hash_table.storage[index]
     last_pair = None
 
+    hash_table.count += 1
+    print(str(hash_table.capacity * 0.7 / hash_table.count))
+    if hash_table.count > hash_table.capacity * 0.7:
+        print("resized up")
+        hash_table = hash_table_resize(hash_table, 1)
+
     while current_pair is not None and current_pair.key != key:
         last_pair = current_pair
         current_pair = current_pair.next
@@ -55,6 +63,7 @@ def hash_table_insert(hash_table, key, value):
         hash_table.storage[index] = new_pair
     else:
         last_pair.next = new_pair
+
 
 
 # '''
@@ -75,10 +84,16 @@ def hash_table_remove(hash_table, key):
         print("Key", key, "does not exist")
     elif current_pair.key == key and last_pair is not None:
         last_pair.next = current_pair.next
+        hash_table.count -= 1
     elif current_pair.key == key and last_pair is None:
         hash_table.storage[index] = current_pair.next
+        hash_table.count -= 1
     else:
         print('oops')
+
+    if hash_table.count < hash_table.capacity * 0.2 and hash_table.capacity > hash_table.init_capacity:
+        print("resized down")
+        hash_table = hash_table_resize(hash_table, -1)
 
 
 # '''
@@ -105,8 +120,9 @@ def hash_table_retrieve(hash_table, key):
 # '''
 # Fill this in
 # '''
-def hash_table_resize(hash_table):
-    new_hash = HashTable(hash_table.capacity * 2)
+def hash_table_resize(hash_table, direction):
+    mult = 2 if direction > 0 else -2
+    new_hash = HashTable(hash_table.capacity * mult)
 
     for i in range(len(hash_table.storage)):
         current = hash_table.storage[i]
@@ -137,11 +153,11 @@ def Testing():
     print(hash_table_retrieve(ht, "line_3"))
 
     old_capacity = len(ht.storage)
-    ht = hash_table_resize(ht)
+    ht = hash_table_resize(ht, 1)
     new_capacity = len(ht.storage)
 
     print("Resized hash table from " + str(old_capacity)
           + " to " + str(new_capacity) + ".")
 
 
-Testing()
+# Testing()
