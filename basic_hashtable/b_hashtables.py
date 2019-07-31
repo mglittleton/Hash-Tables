@@ -54,19 +54,14 @@ def hash_table_insert(hash_table, key, value):
 # If you try to remove a value that isn't there, print a warning.
 # '''
 def hash_table_remove(hash_table, key):
-    pass
+    index = hash(key, hash_table.capacity)
 
-Run
+    if hash_table.storage[index] is None:
+        print('Key', key, 'does not exist')
+    else:
+        hash_table.storage[index] = None
 
-  git config --global user.email "you@example.com"
-  git config --global user.name "Your Name"
 
-to set your account's default identity.
-Omit --global to set the identity only in this repository.
-
-fatal: unable to auto-detect email address (got 'micha@LAPTOP-H4O4BLDR.(none)')
-> git config --get-all user.name
-> git show :basic_hashtable/b_hashtables.py
 
 
 # '''
@@ -75,21 +70,23 @@ fatal: unable to auto-detect email address (got 'micha@LAPTOP-H4O4BLDR.(none)')
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    pass
+    index = hash(key, hash_table.capacity)
+
+    return hash_table.storage[index]
+
 
 
 def Testing():
     ht = BasicHashTable(16)
 
     hash_table_insert(ht, "line", "Here today...\n")
-    print(ht.storage)
 
-    # hash_table_remove(ht, "line")
+    hash_table_remove(ht, "line")
 
-    # if hash_table_retrieve(ht, "line") is None:
-    #     print("...gone tomorrow (success!)")
-    # else:
-    #     print("ERROR:  STILL HERE")
+    if hash_table_retrieve(ht, "line") is None:
+        print("...gone tomorrow (success!)")
+    else:
+        print("ERROR:  STILL HERE")
 
 
 Testing()
