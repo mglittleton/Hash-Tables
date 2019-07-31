@@ -40,11 +40,12 @@ def hash(string, max):
 # '''
 def hash_table_insert(hash_table, key, value):
     index = hash(key, hash_table.capacity)
+    pair = Pair(key, value)
 
     if hash_table.storage[index] is not None:
         print('Value', str(hash_table.storage[index]), 'at index', index, 'has been overwritten.')
 
-    hash_table.storage[index] = value
+    hash_table.storage[index] = pair
 
 
 
@@ -71,8 +72,10 @@ def hash_table_remove(hash_table, key):
 # '''
 def hash_table_retrieve(hash_table, key):
     index = hash(key, hash_table.capacity)
-
-    return hash_table.storage[index]
+    if hash_table.storage[index] is not None:
+        return hash_table.storage[index].value
+    else:
+        return None
 
 
 
