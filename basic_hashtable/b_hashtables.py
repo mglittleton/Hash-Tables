@@ -17,7 +17,7 @@ class BasicHashTable:
     def __init__(self, capacity):
         self.capacity = capacity
         self.count = 0
-        self.elements = [None] * capacity
+        self.storage = [None] * capacity
 
 
 # '''
@@ -39,7 +39,13 @@ def hash(string, max):
 # If you are overwriting a value with a different key, print a warning.
 # '''
 def hash_table_insert(hash_table, key, value):
-    pass
+    index = hash(key, hash_table.capacity)
+
+    if hash_table.storage[index] is not None:
+        print('Value', str(hash_table.storage[index]), 'at index', index, 'has been overwritten.')
+
+    hash_table.storage[index] = value
+
 
 
 # '''
@@ -49,6 +55,18 @@ def hash_table_insert(hash_table, key, value):
 # '''
 def hash_table_remove(hash_table, key):
     pass
+
+Run
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+fatal: unable to auto-detect email address (got 'micha@LAPTOP-H4O4BLDR.(none)')
+> git config --get-all user.name
+> git show :basic_hashtable/b_hashtables.py
 
 
 # '''
@@ -64,13 +82,14 @@ def Testing():
     ht = BasicHashTable(16)
 
     hash_table_insert(ht, "line", "Here today...\n")
+    print(ht.storage)
 
-    hash_table_remove(ht, "line")
+    # hash_table_remove(ht, "line")
 
-    if hash_table_retrieve(ht, "line") is None:
-        print("...gone tomorrow (success!)")
-    else:
-        print("ERROR:  STILL HERE")
+    # if hash_table_retrieve(ht, "line") is None:
+    #     print("...gone tomorrow (success!)")
+    # else:
+    #     print("ERROR:  STILL HERE")
 
 
 Testing()
