@@ -106,7 +106,15 @@ def hash_table_retrieve(hash_table, key):
 # Fill this in
 # '''
 def hash_table_resize(hash_table):
-    pass
+    new_hash = HashTable(hash_table.capacity * 2)
+
+    for i in range(len(hash_table.storage)):
+        current = hash_table.storage[i]
+        while current is not None:
+            hash_table_insert(new_hash, current.key, current.value)
+            current = current.next
+
+    return new_hash
 
 
 def test_print(ht):
@@ -124,26 +132,16 @@ def Testing():
     hash_table_insert(ht, "line_2", "Filled beyond capacity")
     hash_table_insert(ht, "line_3", "Linked list saves the day!")
 
-    test_print(ht)
-
-    hash_table_remove(ht, "line_2")
-
-    print("---------")
-    test_print(ht)
-    print("---------")
-
-
-
     print(hash_table_retrieve(ht, "line_1"))
     print(hash_table_retrieve(ht, "line_2"))
     print(hash_table_retrieve(ht, "line_3"))
 
-    # old_capacity = len(ht.storage)
-    # ht = hash_table_resize(ht)
-    # new_capacity = len(ht.storage)
+    old_capacity = len(ht.storage)
+    ht = hash_table_resize(ht)
+    new_capacity = len(ht.storage)
 
-    # print("Resized hash table from " + str(old_capacity)
-    #       + " to " + str(new_capacity) + ".")
+    print("Resized hash table from " + str(old_capacity)
+          + " to " + str(new_capacity) + ".")
 
 
 Testing()
