@@ -9,6 +9,9 @@ class LinkedPair:
         self.value = value
         self.next = None
 
+    def __str__(self):
+        return  str(self.value)
+
 
 # '''
 # Fill this in
@@ -17,14 +20,20 @@ class LinkedPair:
 # '''
 class HashTable:
     def __init__(self, capacity):
-        pass
+        self.capacity = capacity
+        self.storage = [None] * capacity
 
 
 # '''
 # Research and implement the djb2 hash function
 # '''
 def hash(string, max):
-    pass
+    hash = 5381
+
+    for character in string:
+        hash = ((hash << 5) + hash) + ord(character)
+
+    return hash % max
 
 
 # '''
@@ -33,7 +42,19 @@ def hash(string, max):
 # Hint: Used the LL to handle collisions
 # '''
 def hash_table_insert(hash_table, key, value):
-    pass
+    index = hash(key, hash_table.capacity)
+    new_pair = LinkedPair(key, value)
+    current_pair = hash_table.storage[index]
+    last_pair = None
+
+    while current_pair is not None and current_pair.key != key:
+        last_pair = current_pair
+        current_pair = current_pair.next
+    
+    if last_pair == None:
+        hash_table.storage[index] = new_pair
+    else:
+        last_pair.next = new_pair
 
 
 # '''
@@ -68,16 +89,22 @@ def Testing():
     hash_table_insert(ht, "line_2", "Filled beyond capacity")
     hash_table_insert(ht, "line_3", "Linked list saves the day!")
 
-    print(hash_table_retrieve(ht, "line_1"))
-    print(hash_table_retrieve(ht, "line_2"))
-    print(hash_table_retrieve(ht, "line_3"))
+    current = ht.storage[0]
+    while current is not None:
+        print(current)
+        current = current.next
 
-    old_capacity = len(ht.storage)
-    ht = hash_table_resize(ht)
-    new_capacity = len(ht.storage)
 
-    print("Resized hash table from " + str(old_capacity)
-          + " to " + str(new_capacity) + ".")
+    # print(hash_table_retrieve(ht, "line_1"))
+    # print(hash_table_retrieve(ht, "line_2"))
+    # print(hash_table_retrieve(ht, "line_3"))
+
+    # old_capacity = len(ht.storage)
+    # ht = hash_table_resize(ht)
+    # new_capacity = len(ht.storage)
+
+    # print("Resized hash table from " + str(old_capacity)
+    #       + " to " + str(new_capacity) + ".")
 
 
 Testing()
