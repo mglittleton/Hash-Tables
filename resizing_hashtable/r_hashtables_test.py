@@ -150,8 +150,7 @@ class TestFullHashTable(unittest.TestCase):
         hash_table_insert(ht, "key-8", "val-8")
         hash_table_insert(ht, "key-9", "val-9")
 
-        ht = hash_table_resize(ht)
-
+        # ht = hash_table_resize(ht)
         self.assertTrue(len(ht.storage) == 16)
 
         return_value = hash_table_retrieve(ht, "key-0")

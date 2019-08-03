@@ -1,4 +1,4 @@
-
+import math
 
 # '''
 # Linked List hash table key/value pair
@@ -9,6 +9,9 @@ class LinkedPair:
         self.value = value
         self.next = None
 
+    def __str__(self):
+        return  str(self.value)
+
 
 # '''
 # Fill this in
@@ -17,14 +20,22 @@ class LinkedPair:
 # '''
 class HashTable:
     def __init__(self, capacity):
-        pass
+        self.capacity = capacity
+        self.count = 0
+        self.init_capacity = capacity
+        self.storage = [None] * capacity
 
 
 # '''
 # Research and implement the djb2 hash function
 # '''
 def hash(string, max):
-    pass
+    hash = 5381
+
+    for character in string:
+        hash = ((hash << 5) + hash) + ord(character)
+
+    return hash % max
 
 
 # '''
@@ -33,7 +44,24 @@ def hash(string, max):
 # Hint: Used the LL to handle collisions
 # '''
 def hash_table_insert(hash_table, key, value):
-    pass
+    index = hash(key, hash_table.capacity)
+    new_pair = LinkedPair(key, value)
+    current_pair = hash_table.storage[index]
+    last_pair = None
+
+    hash_table.count += 1
+    if hash_table.count / hash_table.capacity > 0.7:
+        hash_table_resize(hash_table, 1)
+
+    while current_pair is not None and current_pair.key != key:
+        last_pair = current_pair
+        current_pair = current_pair.next
+    
+    if last_pair == None:
+        hash_table.storage[index] = new_pair
+    else:
+        last_pair.next = new_pair
+
 
 
 # '''
@@ -42,7 +70,27 @@ def hash_table_insert(hash_table, key, value):
 # If you try to remove a value that isn't there, print a warning.
 # '''
 def hash_table_remove(hash_table, key):
-    pass
+    index = hash(key, hash_table.capacity)
+
+    current_pair = hash_table.storage[index]
+    last_pair = None
+    while current_pair is not None and current_pair.key != key:
+        last_pair = current_pair
+        current_pair = current_pair.next
+
+    if current_pair is None:
+        print("Key", key, "does not exist")
+    elif current_pair.key == key and last_pair is not None:
+        last_pair.next = current_pair.next
+        hash_table.count -= 1
+    elif current_pair.key == key and last_pair is None:
+        hash_table.storage[index] = current_pair.next
+        hash_table.count -= 1
+    else:
+        print('oops')
+
+    if hash_table.count < hash_table.capacity * 0.2 and hash_table.capacity > hash_table.init_capacity:
+        hash_table_resize(hash_table, -1)
 
 
 # '''
@@ -51,15 +99,45 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    pass
+    index = hash(key, hash_table.capacity)
+
+    current_pair = hash_table.storage[index]
+    while current_pair is not None and current_pair.key != key:
+        current_pair = current_pair.next
+
+    if current_pair is None:
+        return None
+    elif current_pair.key == key:
+        return current_pair.value
+    else:
+        print('oops')
+    
 
 
 # '''
 # Fill this in
 # '''
-def hash_table_resize(hash_table):
-    pass
+def hash_table_resize(hash_table, direction):
+    mult = 2 if direction > 0 else 0.5
+    hash_table.capacity = int(hash_table.capacity * mult)
+    hash_table.count = 0
+    old_storage = hash_table.storage
+    hash_table.storage = [None] * hash_table.capacity
 
+    for i in range(len(old_storage)):
+        current = old_storage[i]
+        if current is not None:
+            hash_table_insert(hash_table, current.key, current.value)
+
+
+
+def test_print(ht):
+    
+    for i in range(len(ht.storage)):
+        current = ht.storage[i]
+        while current is not None:
+            print(current)
+            current = current.next
 
 def Testing():
     ht = HashTable(2)
@@ -73,11 +151,11 @@ def Testing():
     print(hash_table_retrieve(ht, "line_3"))
 
     old_capacity = len(ht.storage)
-    ht = hash_table_resize(ht)
+    hash_table_resize(ht, 1)
     new_capacity = len(ht.storage)
 
     print("Resized hash table from " + str(old_capacity)
           + " to " + str(new_capacity) + ".")
 
 
-Testing()
+# Testing()
